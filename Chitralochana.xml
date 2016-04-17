@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Configurations>
+    <TweetAnalysis>
+        <GeneralConfig>
+            <NumberOfTweetsToFetch>200</NumberOfTweetsToFetch>
+            <TypeOfTweet>recent</TypeOfTweet>
+            <FileMemory>Tweets_Storage_File.csv</FileMemory>
+        </GeneralConfig>
+    </TweetAnalysis>
+    <Logging>
+        <LogLevel>DEBUG</LogLevel>
+    </Logging>
+</Configurations>
