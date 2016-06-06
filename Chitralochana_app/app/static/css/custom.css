@@ -1,0 +1,18 @@
+.mysearchbox{
+    margin-top:10px;
+    border-radius: 15px 50px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+}
+
+.mylabel{
+letter-spacing: 3px;
+word-spacing: 10px;
+font-family: "Sans-serif";
+font-familty: italic;
+font-size: 14px;
+font-color: 	#00FFFF;
+
+}

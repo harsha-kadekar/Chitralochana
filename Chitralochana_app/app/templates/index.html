@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+    <h3 class="text-center">Welcome to Chitralochana - social media analyses & visualization</h3>
+
+        <form action="" method="post" name="usersearch">
+            {{ form.hidden_tag() }}
+
+            <div>
+                <div>
+                    <label style="letter-spacing: 3px; word-spacing: 5px; font-family: Sans-serif; font-style: italic; font-size: 18px;" for="usersearch">Whats the buzzz?</label>
+                        {{ form.user_input_string(style="margin-top:10px; border-radius: 15px; border: 2px solid #ff6666; padding: 20px; width: 1124px; height: 20px;") }}
+                </div>
+                <div class="text-center">
+                    <input class="btn btn-primary" type="submit" value="show">
+                </div>
+            </div>
+
+        </form>
+
+{% endblock %}
