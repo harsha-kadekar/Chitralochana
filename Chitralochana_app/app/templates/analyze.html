@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="well">
+        <div>
+            <h3>{{ usersentance }}</h3>
+        </div>
+        <div>
+            <ul>
+            {% for word in words %}
+                <li>{{ word }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
