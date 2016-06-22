@@ -1,10 +1,12 @@
 # Chitralochana
-A tool to anayze tweets, fb posts and then plain texts
+This is a tool to analyze and visualize the social network buzz.
 
-The idea of this generated from an earlier similar project which I had worked on - https://github.com/ser515asu/AgileTweetViz-GeekOh
+It has 3 main work - fetch meaningful data, analyze that data and finally visualize the information drawn out of that data.
 
-Initial plan is to analyze the tweets. Different types of analysis planned are - Sentiment analysis, hashtag relationship, geo-location analysis, tweet time frame analysis. Once this analysis is done, we will be representing that analysis in different visualizations. User will provide input in a web page, which will be passed to an engine which will do the analysis. Based on that analysis again in web page we will be displaying visualization.
+Fetch meaningful data - Social network as of now mainly consists of 2 main websites or platform: Facebook and Twitter. So fetching meaningful data means better ways for scrapping the tweets from twitter as well as useful information from facebook. For twitter I will be using Tweepy and for facebook I will be using facebook-sdk
 
-I am hoping to extensively use Natrual Language processing for analysis of tweets. Then for visualization I am planning to use D3 javascript framework. Analysis engine will be written in python. As it involves web interface, I am planning to use DJango web development framwork. But I donot know anyting about web part. So still decision is not yet taken.
+Analyze data - Once I have retrieved that data, I will try to build model on that data. In case of twitter various relationships like tweet, its user, search category, hashtag, etc. For facebook I am yet to figure it out. Apart from this model building various analysis will be done like - sentiment analysis, trying to get the word cloud of all the data, among the searched strings which hashtag is more popular, try to get the summary of what is going on based on all the data, then geo location analysis and similarly time lapse of the data production.
 
-Once I am comfortable with the tweet analysis, next step if facebook and other social network analysis. Finally pure language analysis.
+Visualize information - After doing various analysis, that information or result will be showed in the form of various graphs and other visualization forms so that user can get it in a better format.
+
+Development - This is will be a website. Website development will be done using python flask. For twitter interaction, I will be using Tweepy. Similarly for facebook interaction I will be using facebook-sdk. Finally for graphs and visualization, I will be using d3.js . I am yet to think of storage of data. In that case most probably I will be using mongodb. For frontend, I might use AngularJS. For styling purpose I will be using boostrap.
