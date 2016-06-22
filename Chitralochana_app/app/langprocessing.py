@@ -29,17 +29,23 @@ class LanguageProcessor:
         text = nltk.Text(tokens)
         tags = nltk.pos_tag(text)
         imp_words = []
+        imp_words.append(self.UserSentence.lower())
+        fullsentence = re.sub('[^0-9a-zA-Z]+', '', self.UserSentence).lower()
+        if not imp_words.__contains__(fullsentence):
+            imp_words.append(fullsentence)
+
+
         for tag in tags:
             if tag[1] == 'NNS' or tag[1] == 'NN' or tag[1] == 'NNP' or tag[1] == 'NNPS':
-                imp_words.append(tag[0].lower())
+                if not imp_words.__contains__(tag[0].lower()):
+                    imp_words.append(tag[0].lower())
         without_stopwords = [w for w in tokens if not w in stopwords.words("english")]
         for word in without_stopwords:
             if not imp_words.__contains__(word):
                 imp_words.append(word.lower())
 
-        fullsentence = re.sub('[^0-9a-zA-Z]+', '', self.UserSentence)
-        imp_words.append(fullsentence.lower())
-        imp_words.append(self.UserSentence.lower())
+
+
 
         # print imp_words
 
