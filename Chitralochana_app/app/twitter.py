@@ -12,7 +12,7 @@ from relations import Tweet, Tweet_User, Twitter_Hashtag
 
 
 
-def GetTweetsSimple(searchString):
+def GetTweets(searchString):
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)

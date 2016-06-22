@@ -9,7 +9,8 @@ from app import app
 from flask import render_template, flash, redirect, url_for, request, session
 from forms import SearchForm
 from langprocessing import LanguageProcessor
-from twitter import GetTweetsSimple
+from twitter import GetTweets
+from facebookapi import GetPosts
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -33,5 +34,6 @@ def analyze():
     sentence = session['usersentence']
     imp_words = session['words']
     for word in imp_words:
-        GetTweetsSimple(word)
+        # GetTweets(word)
+        GetPosts(word)
     return render_template('analyze.html', title=sentence, usersentance=sentence, words=imp_words)
