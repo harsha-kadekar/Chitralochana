@@ -47,7 +47,7 @@ class LanguageProcessor:
 
 
 
-        # print imp_words
+        print imp_words
 
         return imp_words
 

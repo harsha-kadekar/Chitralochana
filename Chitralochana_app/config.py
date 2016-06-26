@@ -10,6 +10,14 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'Xtra1Care&For5Special&Key!2'
 
+MONGODB_NAME = 'Tweetsdb'
+MONGODB_HOST = ''
+MONGODB_HOSTADDRESS = ''
+MONGODB_PORT = ''
+MONGODB_USERNAME = ''
+MONGODB_PASSWORD = ''
+MONGODB_SETTINGS = {'DB': "tweetDB"}
+
 ADMINS = [
     'harsha.kadekar@gmail.com'
 ]
