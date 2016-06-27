@@ -12,9 +12,11 @@ from tweepy.streaming import StreamListener
 import os
 import io
 import time
-from config import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MAX_FETCH_TWEETS
+from config import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MAX_FETCH_TWEETS, MONGODB_SETTINGS
 from relations import Tweet_User, Twitter_Hashtag
+from mongoengine import connect
 from models import Tweet
+# from app import db
 
 class listener(StreamListener):
 
@@ -48,19 +50,20 @@ def GetPastTweets(searchStrings, user_query):
     auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
     api = tweepy.API(auth)
 
-    listOftweets = []
-    user2tweets = {}
-    hashtag2tweets = {}
 
+    deleteEntries = connect(MONGODB_SETTINGS['DB'])
+    deleteEntries.drop_database(MONGODB_SETTINGS['DB'])
+
+    listOftweets = []
     listTweetIDs = []
 
     for searchString in searchStrings:
         print searchString
         searchTweets = [status for status in tweepy.Cursor(api.search, q=searchString).items(MAX_FETCH_TWEETS)]
-        somefile = io.open('dump.txt', 'a', encoding='utf-8')
-        dump = searchTweets.__str__().encode('utf-8')
-        somefile.write(unicode(dump))
-        somefile.close()
+        # somefile = io.open('dump.txt', 'a', encoding='utf-8')
+        # dump = searchTweets.__str__().encode('utf-8')
+        # somefile.write(unicode(dump))
+        # somefile.close()
         for tweet in searchTweets:
             tweet_id = tweet.id
             if listTweetIDs.__contains__(tweet_id):
@@ -84,7 +87,7 @@ def GetPastTweets(searchStrings, user_query):
             oneTweet = Tweet(tweet_id=tweet_id, tweet_msg=tweet_message, tweet_likes=tweet_favoritecount, tweet_retweets=tweet_retweet_count, tweet_search_category=searchString, tweet_user_search_query=user_query, tweet_positiveOrnegative=tweet_positiveOrnegative, tweet_polarOrneutral=tweet_polarOrneutral, tweet_user_handle=tweet_userhandle, tweet_user_name=tweet_username, tweet_user_followers=tweet_user_no_of_followers, tweet_user_following=tweet_user_no_of_following, tweet_isretweet=tweet_isRetweet, tweet_time=tweet_createtime, tweet_location=tweet_location, tweet_geo=tweet_geo)
             oneTweet.save()
             listTweetIDs.append(tweet_id)
-    return listOftweets
+    pass
 
 def GetPresentTweets(searchStrings):
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
