@@ -7,13 +7,18 @@
 #######################################################################################################################
 from flask import Flask
 from flask_mongoengine import MongoEngine
-from mongoengine import connect
-from config import MONGODB_NAME, MONGODB_HOST, MONGODB_HOSTADDRESS, MONGODB_PASSWORD, MONGODB_PORT, MONGODB_USERNAME
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.config.from_object('config')
 
+socketIO = SocketIO(app)
 # connect(MONGODB_NAME, host=MONGODB_HOST+MONGODB_USERNAME+":"+MONGODB_PASSWORD+"@"+MONGODB_HOSTADDRESS)
+
+userSentence = ''
+tweetThread = None
+metamodelThread = None
+languageProcessingThread = None
 
 db = MongoEngine(app)
 

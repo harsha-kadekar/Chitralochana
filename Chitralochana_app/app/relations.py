@@ -31,4 +31,4 @@ class Twitter_Hashtag(object):
         self.positiveCount = posCount
         self.polarityCount = polCount
         self.neutralCount = neuCount
-        self.related_hashtags = []
+        self.related_hashtags = {}
