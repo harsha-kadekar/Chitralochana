@@ -169,21 +169,22 @@ def metamodelBuilding():
         for hashtag in hashtag_rel.keys():
             # full_hashtags = full_hashtags + '#' + hashtag + ' '
             if topfiveHashtags.__len__() == 0:
-                topfiveHashtags.append((hashtag, hashtag_rel[hashtag].tweets.__len__()))
+                topfiveHashtags.append((hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
             else:
                 bfound = False
                 for i in range(0, topfiveHashtags.__len__()):
-                    if topfiveHashtags[i][1] < hashtag_rel[hashtag].tweets.__len__():
-                        topfiveHashtags.insert(i, (hashtag, hashtag_rel[hashtag].tweets.__len__()))
+                    if topfiveHashtags[i][1][0] < hashtag_rel[hashtag].tweets.__len__():
+                        topfiveHashtags.insert(i, (hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
                         bfound = True
                         break
                 if not bfound:
-                    topfiveHashtags.insert(topfiveHashtags.__len__(), (hashtag, hashtag_rel[hashtag].tweets.__len__()))
+                    topfiveHashtags.insert(topfiveHashtags.__len__(), (hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
 
                 if topfiveHashtags.__len__() > 10:
                     topfiveHashtags.__delitem__(10)
 
         for data in topfiveHashtags:
+            print data
             full_hashtags = full_hashtags + '#' + data[0] + ' '
 
 

@@ -7,7 +7,6 @@ $(document).ready( function(){
     });
 
     socket.on('stats', function(data){
-        //alert('recieved message');
 
         stats = JSON.parse(data)
         console.debug(stats)
@@ -15,84 +14,132 @@ $(document).ready( function(){
         $('#user-nos span').text(stats.TotalUsers.toString());
         $('#hashtag-searchs').text(stats.Hashtags)
 
-        top5tags = stats.Top5Hashtags
-
-        var width = 1000;
-        var barHeight = 20;
-        var totalheight = 150;
-
-
         $('.barchart').empty();
+        top5tags = stats.Top5Hashtags;
 
-        var x = d3.scale.linear()
-                    .domain([0, d3.max(top5tags, function(d){
-                        return d[1];
-                    })])
-                    .range([0, width]);
+        var margin = {top: 20, right: 20, bottom: 30, left: 40};
+        var width = $(".barchart").width() - margin.left - margin.right;
+        var height = 300 - margin.top - margin.bottom;
+        var padding = 1;
+        var compareFactors = ["Tweets", "Likes", "Retweets"];
 
-        var y = d3.scale.ordinal()
-                    .domain(top5tags)
-                    .rangeBands([0, totalheight]);
+        var x0 = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], .1)
+                    .domain(top5tags.map(function(d){
+                        return d[0];
+                    }));
+
+        var x1 = d3.scale.ordinal()
+                    .domain(compareFactors)
+                    .rangeRoundBands([0, x0.rangeBand()]);
+
+        var color = d3.scale.ordinal()
+                    .range(["#98abc5", "#8a89a6", "#7b6888"]);
+
+        var colorvalues = ["#98abc5", "#8a89a6", "#7b6888"];
+
+        var yScale = d3.scale.linear()
+                     .domain([0, d3.max(top5tags, function(d){
+                        return d3.max(d[1], function(d){
+                            return d;
+                        });
+                     }) ])
+                     .range([0, height]);
+
+        var xAxis = d3.svg.axis()
+                    .scale(x0)
+                    .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+                    .scale(yScale)
+                    .orient("left")
+                    .tickFormat(d3.format(".2s"));
 
         var barchart = d3.select(".barchart")
                         .append("svg:svg")
-                        .attr("width", width)
-                        .attr("height", y);
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var bar = barchart.selectAll("g")
-                        .data(top5tags)
-                        .enter().append("g")
-                        .attr("transform", function(d, i) { return "translate(0,15)"; });
+        barchart.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height+")")
+                .call(xAxis);
 
-        bar.append("rect")
-            .attr("width", function(d){
-                return x(d[1]);
-            })
-            .attr("y", y)
-            .attr("height", y.rangeBand());
+        barchart.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
 
-        bar.append("text")
-            .attr("x", function(d) { return x(d[1]); })
-            .attr("y", function(d) { return y(d) + y.rangeBand() / 2; })
+        var grpHtag = barchart.selectAll(".tophashtags")
+                                .data(top5tags)
+                                .enter()
+                                .append("g")
+                                .attr("class", "tophashtags")
+                                .attr("transform", function(d){
+                                    return "translate("+x0(d[0])+",0)";
+                                });
+
+        grpHtag.selectAll("rect")
+                .data(function(d){
+                    return d[1];
+                })
+                .enter()
+                .append("rect")
+                .attr("width", x1.rangeBand())
+                .attr("x", function(d,i){
+                    return x1(compareFactors[i]);
+                })
+                .attr("y", function(d){
+                    return height - yScale(d);
+                })
+                .attr("height", function(d){
+                    return yScale(d);
+                })
+                .style("fill", function(d,i){
+                    return colorvalues[i];
+                });
+
+        var legend = barchart.selectAll(".legend")
+            .data(compareFactors)
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+        legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", function(d, i){
+                return colorvalues[i];
+            });
+
+        legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
             .attr("dy", ".35em")
-            .text(function(d) { return d[0]+':'+d[1]; });
+            .style("text-anchor", "end")
+            .text(function(d, i) { return compareFactors[i]; });
 
-        barchart.selectAll("line")
-            .data(x.ticks(10))
-            .enter().append("svg:line")
-            .attr("x1", function(d){
-                return x(d[1]);
-            })
-            .attr("x2", function(d){
-                return x(d[1]);
-            })
-            .attr("y1", 0)
-            .attr("y2", totalheight)
-            .attr("stroke", "#ccc");
+        /*var bar = barchart.selectAll("rect")
+                          .data(top5tags)
+                          .enter()
+                          .append("rect")
+                          .attr("width", width/top5tags.length - padding)
+                          .attr("x", function(d, i){
+                            return i*(width/top5tags.length);
+                          })
+                          .attr("y", function(d){
+                            return height - yScale(d[1][0]);
+                          })
+                          .attr("height", function(d){
+                            return yScale(d[1][0]);
+                          })
+                          .attr("fill", function(d){
+                            return "rgb(0, 0, "+(d[1][0]*10) +")";
+                          });*/
 
-            barchart.selectAll("text.rule")
-                    .data(x.ticks(10))
-                    .enter().append("svg:text")
-                    .attr("class", "rule")
-                    .attr("x", function(d){
-                        return x(d[1]);
-                    })
-                    .attr("y", 0)
-                    .attr("dy", -3)
-                    .attr("text-anchor", "middle")
-                    .text(String);
 
-        barchart.append("svg:line")
-            .attr("y1", 0)
-            .attr("y2", totalheight)
-            .attr("stroke", "#000");
-
-        /*d3.select(".barchart")
-            .selectAll("div")
-            .data(top5tags)
-            .enter().append("div")
-            .style("width", function(d) { return x(d[1])  + "px"; })
-            .text(function(d) { return d[0]; });*/
     });
 
 })
