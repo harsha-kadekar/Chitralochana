@@ -19,7 +19,7 @@ $(document).ready( function(){
 
         var margin = {top: 20, right: 20, bottom: 30, left: 40};
         var width = $(".barchart").width() - margin.left - margin.right;
-        var height = 300 - margin.top - margin.bottom;
+        var height = 400 - margin.top - margin.bottom;
         var padding = 1;
         var compareFactors = ["Tweets", "Likes", "Retweets"];
 
@@ -121,24 +121,69 @@ $(document).ready( function(){
             .style("text-anchor", "end")
             .text(function(d, i) { return compareFactors[i]; });
 
-        /*var bar = barchart.selectAll("rect")
-                          .data(top5tags)
-                          .enter()
-                          .append("rect")
-                          .attr("width", width/top5tags.length - padding)
-                          .attr("x", function(d, i){
-                            return i*(width/top5tags.length);
-                          })
-                          .attr("y", function(d){
-                            return height - yScale(d[1][0]);
-                          })
-                          .attr("height", function(d){
-                            return yScale(d[1][0]);
-                          })
-                          .attr("fill", function(d){
-                            return "rgb(0, 0, "+(d[1][0]*10) +")";
-                          });*/
+        $('.wordcloudrep').empty();
+        wordList = stats.WordList;
 
+        var width_wordlist = $(".wordcloudrep").width();
+        var height_wordlist = 400;
+
+        var textScale = d3.scale.linear()
+                     .domain([0, d3.max(wordList, function(d){
+                        return d[1];
+                     }) ])
+                     .range([10, 100]);
+
+        var fill_wordList = d3.scale.category20();
+
+        d3.layout.cloud()
+                        .size([width_wordlist, height_wordlist])
+                        .words(wordList)
+                        .padding(1)
+                        .rotate(
+                            function(){
+                                //return ~~(Math.random()*2)*90;
+                                return 0;
+                            }
+                        )
+                        .font("Impact")
+                        .fontSize(function(d){
+                            return textScale(d[1]);
+                        })
+                        .on("end", draw)
+                        .start();
+
+        function draw(wordList)
+        {
+            d3.select(".wordcloudrep")
+            .append("svg")
+            .attr("width", width_wordlist)
+            .attr("height", height_wordlist)
+            .append("g")
+            .attr("transform", "translate(" + width_wordlist/2 + "," + height_wordlist/2 + ")")
+            .selectAll("text")
+            .data(wordList)
+            .enter()
+            .append("text")
+            .style("font-size", function(d){
+                return textScale(d[1]) + "px";
+            })
+            .style("font-family", "Impact")
+            .style("fill", function(d, i){
+                return fill_wordList(i);
+            })
+            .style("opacity", 1e-6)
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d){
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .transition()
+            .duration(1000)
+            .style("opacity", 1)
+            .text(function(d){
+                return d[0];
+            })
+
+        }
 
     });
 

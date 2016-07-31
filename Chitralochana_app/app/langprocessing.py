@@ -1,19 +1,21 @@
 #######################################################################################################################
 # Name: langprocessing.py
 # Description: This file will have all the functions that necessary to the natural language processing of the given
-#               sentence.
+#               sentence or list of sentences.
 # Developer: Harsha Kadekar
-# References:
+# References: http://sahandsaba.com/visualizing-philosophers-and-scientists-by-the-words-they-used-with-d3js-and-python.html
 # Update: 1st version - 6/7/2016
+#         2nd version - 7/25/2016
 #######################################################################################################################
 from app import tweetThread, userSentence
 import nltk
 import re
 from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet
+from sklearn.feature_extraction.text import CountVectorizer
 import thread
+import numpy as np
 from twitter import GetPastTweets
-
 
 class LanguageProcessor:
     def __int__(self):

@@ -3,6 +3,8 @@
 # Description: This file has functions to fetch tweets from Twitter
 # Developer: Harsha
 # Reference: https://marcobonzanini.com/2015/03/02/mining-twitter-data-with-python-part-1/
+#            https://marcobonzanini.com/2015/03/09/mining-twitter-data-with-python-part-2/
+#            https://marcobonzanini.com/2015/03/09/mining-twitter-data-with-python-part-3/
 #            http://stats.seandolinar.com/collecting-twitter-data-using-a-python-stream-listener/
 #            http://stackoverflow.com/questions/22469713/managing-tweepy-api-search
 # Update: 1st Version 6/7/2015
@@ -10,18 +12,66 @@
 import tweepy
 from app import socketIO, userSentence, metamodelThread
 from tweepy import OAuthHandler
-from config import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MAX_FETCH_TWEETS, MONGODB_SETTINGS
+from config import TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, MAX_FETCH_TWEETS, MONGODB_SETTINGS, MAX_WORD_COUNTS
 from relations import Tweet_User, Twitter_Hashtag
 from mongoengine import connect
 from models import Tweet
+from nltk.corpus import stopwords
+from collections import Counter
 import re
 import time
+import string
 from flask_socketio import emit
 import thread
 import json
 
 completeTweetFetch = False
 completedMetaModel = False
+
+class WordCloudGenerator(object):
+    def __init__(self, list_of_messages):
+        self.Msg_List = list_of_messages
+        self.ignore_list = ['rt', 'via'] + list(string.punctuation) + stopwords.words('english')
+        # ------------Start------------------------
+        # following code taken from https://marcobonzanini.com/2015/03/09/mining-twitter-data-with-python-part-2/
+        self.emoticons_str = r"""
+        (?:
+        [:=;] # Eyes
+        [oO\-]? # Nose (optional)
+        [D\)\]\(\]/\\OpP] # Mouth
+        )"""
+        self.regex_str = [
+            self.emoticons_str,
+            r'<[^>]+>', # HTML tags
+            r'(?:@[\w_]+)', # @-mentions
+            r"(?:\#+[\w_]+[\w\'_\-]*[\w_]+)", # hash-tags
+            r'http[s]?://(?:[a-z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-f][0-9a-f]))+', # URLs
+            r'(?:(?:\d+,?)+(?:\.?\d+)?)', # numbers
+            r"(?:[a-z][a-z'\-_]+[a-z])", # words with - and '
+            r'(?:[\w_]+)', # other words
+            r'(?:\S)' # anything else
+            ]
+
+        self.tokens_re = re.compile(r'('+'|'.join(self.regex_str)+')', re.VERBOSE | re.IGNORECASE)
+        self.emoticon_re = re.compile(r'^'+self.emoticons_str+'$', re.VERBOSE | re.IGNORECASE)
+
+        #--------- End--------------------
+
+    def process(self):
+        count_all = Counter()
+        emoji_re = re.compile(u'('
+                              u'\ud83c[\udf00-\udfff]|'
+                              u'\ud83d[\udc00-\ude4f\ude80-\udeff]|'
+                              u'\u2026|'
+                              u'\ufe0f|'
+                              u'[\u2600-\u26FF\u2700-\u27BF])+',
+                              re.UNICODE)
+
+        for tweet in self.Msg_List:
+            tweet = emoji_re.sub('',tweet)
+            list_tokens = [tokens for tokens in self.tokens_re.findall(tweet) if tokens.lower() not in self.ignore_list and not tokens.startswith('https:') and tokens.__len__() > 1]
+            count_all.update(list_tokens)
+        return count_all.most_common(MAX_WORD_COUNTS)
 
 def GetPastTweets(searchStrings):
     auth = OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
@@ -114,6 +164,7 @@ def metamodelBuilding():
         user_tweets = {}
         hashtag_rel = {}
         list_tweets = Tweet.objects(tweet_user_search_query=userSentence)
+        tweet_msgs_lst = []
 
         no_of_retweets = 0
         no_of_likes = 0
@@ -132,6 +183,8 @@ def metamodelBuilding():
                 user = Tweet_User(tweet.tweet_user_handle, tweet.tweet_user_name, tweet.tweet_user_following, tweet.tweet_user_following, tweet.tweet_likes, 1, 0, 0, 0, 0)
                 user_tweets.__setitem__(tweet.tweet_user_handle, user)
                 new_user = True
+
+            tweet_msgs_lst.append(tweet.tweet_msg)
 
             words = tweet.tweet_msg.split(' ')
             hashtags_lst = []
@@ -187,8 +240,8 @@ def metamodelBuilding():
             print data
             full_hashtags = full_hashtags + '#' + data[0] + ' '
 
-
-
+        wordlist = wordCloudGeneration(tweet_msgs_lst)
+        print wordlist
 
         full_hashtags = full_hashtags[:full_hashtags.__len__()-1]
 
@@ -198,6 +251,7 @@ def metamodelBuilding():
         metadata.__setitem__('TotalUsers', user_tweets.__len__())
         metadata.__setitem__('Hashtags', full_hashtags)
         metadata.__setitem__('Top5Hashtags', topfiveHashtags)
+        metadata.__setitem__('WordList', wordlist)
 
         value = json.dumps(metadata)
 
@@ -213,5 +267,10 @@ def metamodelBuilding():
 
 
         # socketIO.send('stats', json.dumps(metadata), '/analyze')
+
+def wordCloudGeneration(list_tweet_msgs):
+    wordCloud = WordCloudGenerator(list_tweet_msgs)
+    return wordCloud.process()
+
 
 
