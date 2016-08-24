@@ -7,6 +7,7 @@
 #######################################################################################################################
 from app import db
 
+# This class represents the twitter data. Each object of this class represents one tweet.
 class Tweet(db.Document):
     tweet_id = db.IntField(required=True, unique=True)
     tweet_msg = db.StringField()

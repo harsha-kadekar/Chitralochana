@@ -8,18 +8,17 @@
 from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_socketio import SocketIO
+from globalvars import init_globalvariables
 
 app = Flask(__name__)
+
+# Read the configuration file
 app.config.from_object('config')
 
 socketIO = SocketIO(app)
 # connect(MONGODB_NAME, host=MONGODB_HOST+MONGODB_USERNAME+":"+MONGODB_PASSWORD+"@"+MONGODB_HOSTADDRESS)
 
-userSentence = ''
-tweetThread = None
-metamodelThread = None
-languageProcessingThread = None
-
+init_globalvariables()
 db = MongoEngine(app)
 
 from app import views
