@@ -21,7 +21,7 @@ import json
 import globalvars
 
 
-def metamodelBuilding():
+def twittermetamodelBuilding():
     '''
     This function will be used to build the metamodel of the twitter data.
     This basically develops all the background data needed for the visualization, using Tweet data stored in DB.

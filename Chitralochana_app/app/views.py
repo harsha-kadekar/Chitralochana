@@ -8,7 +8,7 @@
 from app import app, socketIO
 from flask import render_template, flash, redirect, url_for, request, session
 from forms import SearchForm
-from DataDownloader import twitterdownloadInitiator
+from DataDownloader import DataDownloaderMethods
 import thread
 import globalvars
 from facebookapi import GetPosts
@@ -19,7 +19,6 @@ from facebookapi import GetPosts
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    global userSentence
     form = SearchForm()
     if form.validate_on_submit():
         flash("User input = '" + form.user_input_string.data +"' will be analyzed ")
@@ -28,7 +27,7 @@ def index():
         globalvars.userSentence = form.user_input_string.data.__str__()
         user_sentence = globalvars.userSentence
         print globalvars.userSentence
-        globalvars.languageProcessingThread = thread.start_new_thread(twitterdownloadInitiator,(user_sentence, ))
+        globalvars.languageProcessingThread = thread.start_new_thread(DataDownloaderMethods.twitterdownloadInitiator,(user_sentence, ))
         return redirect(url_for('analyze'))
 
     return render_template('index.html', title='Home', form=form)
