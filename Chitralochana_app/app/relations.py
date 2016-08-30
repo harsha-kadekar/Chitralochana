@@ -20,6 +20,7 @@ class Tweet_User(object):
         self.polarCount = polarCount        # Total number of tweets having polarity
         self.neutralCount = neutralCount    # Total number of tweets which are neutral
         self.tweets = []                    # Tweets which are tweeted by the user
+        self.hashtagsUsed = {}              # List of hashtags used by the user
 
 # This class represent a twitter hashtag.
 class Twitter_Hashtag(object):

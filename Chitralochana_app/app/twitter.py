@@ -84,6 +84,8 @@ def twittermetamodelBuilding():
                         hashtag_rel.__setitem__(hashtag_string, hashtag_obj)
                     if not hashtags_lst.__contains__(hashtag_string):
                         hashtags_lst.append(hashtag_string)
+                    if not user.hashtagsUsed.has_key(hashtag_string):
+                        user.hashtagsUsed.__setitem__(hashtag_string, hashtag_obj)
 
             # print hashtags_lst
             for hashtag in hashtags_lst:
