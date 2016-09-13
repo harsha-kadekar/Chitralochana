@@ -34,4 +34,5 @@ class Twitter_Hashtag(object):
         self.positiveCount = posCount   # Number of tweets having positive sentiment
         self.polarityCount = polCount   # Number of tweets which are polar
         self.neutralCount = neuCount    # Number of tweets which are neutral
+        self.hashtag_rank = None
         self.related_hashtags = {}      # All the hashtags used along with this hashtags

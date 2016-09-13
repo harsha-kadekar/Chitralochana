@@ -90,6 +90,7 @@ def twittermetamodelBuilding():
             # print hashtags_lst
             for hashtag in hashtags_lst:
                 hashtag_obj = hashtag_rel[hashtag]
+                hashtag_obj.hashtag_rank = hashtag_rank_calculator(hashtag_obj.tweets.__len__(), hashtag_obj.no_of_users, hashtag_obj.no_of_retweets, hashtag_obj.no_of_likes)
                 for otherhashtag in hashtags_lst:
                     if otherhashtag == hashtag:
                         continue
@@ -101,16 +102,16 @@ def twittermetamodelBuilding():
         for hashtag in hashtag_rel.keys():
             # full_hashtags = full_hashtags + '#' + hashtag + ' '
             if topfiveHashtags.__len__() == 0:
-                topfiveHashtags.append((hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
+                topfiveHashtags.append((hashtag, hashtag_rel[hashtag].hashtag_rank))
             else:
                 bfound = False
                 for i in range(0, topfiveHashtags.__len__()):
-                    if topfiveHashtags[i][1][0] < hashtag_rel[hashtag].tweets.__len__():
-                        topfiveHashtags.insert(i, (hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
+                    if topfiveHashtags[i][1] < hashtag_rel[hashtag].hashtag_rank:
+                        topfiveHashtags.insert(i, (hashtag, hashtag_rel[hashtag].hashtag_rank))
                         bfound = True
                         break
                 if not bfound:
-                    topfiveHashtags.insert(topfiveHashtags.__len__(), (hashtag, (hashtag_rel[hashtag].tweets.__len__(), hashtag_rel[hashtag].no_of_likes, 0)))
+                    topfiveHashtags.insert(topfiveHashtags.__len__(), (hashtag, hashtag_rel[hashtag].hashtag_rank))
 
                 if topfiveHashtags.__len__() > 10:
                     topfiveHashtags.__delitem__(10)
@@ -148,6 +149,83 @@ def twittermetamodelBuilding():
         time.sleep(2)
 
         # socketIO.send('stats', json.dumps(metadata), '/analyze')
+
+
+def hashtag_rank_calculator(numTweets, numUsers, numRetweets, numLikes):
+    '''
+    This function will calculate a ranking for given hashtag.
+    It each range of values a particular value will be given to parameters. Then total sum of parameter values gives the
+    ranking.
+    formula is Normalized(Number of tweets) + Normalized(Number of Users) + Normalized(Number of retweets) + Normalized(Number of likes)
+    0-100: 0.1, 101-1000: 0.3, 1001-10000: 0.5, 10001-100000:0.7, 100001-1000000:0.9, 1000001-infi:1
+    :param numTweets: Number of tweets which used this hashtag
+    :param numUsers: Number of users who have used this users
+    :param numRetweets: Total retweets done for this hashtag
+    :param numLikes: Total number of likes present for this hashtag
+    :return: Returns the rank of a hashtag
+    '''
+
+    normTweets = 0
+    normUsers = 0
+    normRetweets = 0
+    normLikes = 0
+    rank = 0
+
+    if numTweets <= 100:
+        normTweets = 0.1
+    elif numTweets <= 1000:
+        normTweets = 0.3
+    elif numTweets <= 10000:
+        normTweets = 0.5
+    elif numTweets <= 100000:
+        normTweets = 0.7
+    elif numTweets <= 1000000:
+        normTweets = 0.9
+    else:
+        normTweets = 1
+
+    if numUsers <= 100:
+        normUsers = 0.1
+    elif numUsers <= 1000:
+        normUsers = 0.3
+    elif numUsers <= 10000:
+        normUsers = 0.5
+    elif numUsers <= 100000:
+        normUsers = 0.7
+    elif numUsers <= 1000000:
+        normUsers = 0.9
+    else:
+        normUsers = 1
+
+    if numLikes <= 100:
+        normLikes = 0.1
+    elif numLikes <= 1000:
+        normLikes = 0.3
+    elif numLikes <= 10000:
+        normLikes = 0.5
+    elif numLikes <= 100000:
+        normLikes = 0.7
+    elif numLikes <= 1000000:
+        normLikes = 0.9
+    else:
+        normLikes = 1
+
+    if numRetweets <= 100:
+        normRetweets = 0.1
+    elif numRetweets <= 1000:
+        normRetweets = 0.3
+    elif numRetweets <= 10000:
+        normRetweets = 0.5
+    elif numRetweets <= 100000:
+        normRetweets = 0.7
+    elif numRetweets <= 1000000:
+        normRetweets = 0.9
+    else:
+        normRetweets = 1
+
+    rank = normTweets + normUsers + normRetweets + normLikes
+    rank = round(rank, 2)
+    return rank
 
 
 
