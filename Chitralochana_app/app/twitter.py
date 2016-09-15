@@ -55,9 +55,9 @@ def twittermetamodelBuilding():
             if user_tweets.has_key(tweet.tweet_user_handle):
                 user = user_tweets[tweet.tweet_user_handle]
                 user.tweet_likes += tweet.tweet_likes
-                user.no_of_tweets += 1
+                user.no_of_retweets += tweet.tweet_retweets
             else:
-                user = Tweet_User(tweet.tweet_user_handle, tweet.tweet_user_name, tweet.tweet_user_following, tweet.tweet_user_following, tweet.tweet_likes, 1, 0, 0, 0, 0)
+                user = Tweet_User(tweet.tweet_user_handle, tweet.tweet_user_name, tweet.tweet_user_following, tweet.tweet_user_followers, tweet.tweet_likes, tweet.tweet_retweets, 0, 0, 0, 0)
                 user_tweets.__setitem__(tweet.tweet_user_handle, user)
                 new_user = True
 
@@ -120,6 +120,24 @@ def twittermetamodelBuilding():
             print data
             full_hashtags = full_hashtags + '#' + data[0] + ' '
 
+        top10Users = []
+        for user in user_tweets.keys():
+            user_tweets[user].user_rank = user_rank_calculator(user_tweets[user].tweet_follower, user_tweets[user].tweets.__len__(), user_tweets[user].no_of_retweets, user_tweets[user].likes)
+            if top10Users.__len__() == 0:
+                top10Users.append((user, user_tweets[user].user_rank))
+            else:
+                bfound = False
+                for i in range(0, top10Users.__len__()):
+                    if top10Users[i][1] < user_tweets[user].user_rank:
+                        top10Users.insert(i, (user, user_tweets[user].user_rank))
+                        bfound = True
+                        break
+                if not bfound:
+                    top10Users.insert(top10Users.__len__(), (user, user_tweets[user].user_rank))
+
+                if top10Users.__len__() > 10:
+                    top10Users.__delitem__(10)
+
         wordlist = LanguageProcessor.Get_Common_Words_Tweets(tweet_msgs_lst)
         print wordlist
 
@@ -132,6 +150,7 @@ def twittermetamodelBuilding():
         metadata.__setitem__('Hashtags', full_hashtags)
         metadata.__setitem__('Top5Hashtags', topfiveHashtags)
         metadata.__setitem__('WordList', wordlist)
+        metadata.__setitem__('TopUsers', top10Users)
 
         value = json.dumps(metadata)
 
@@ -149,6 +168,85 @@ def twittermetamodelBuilding():
         time.sleep(2)
 
         # socketIO.send('stats', json.dumps(metadata), '/analyze')
+
+
+def user_rank_calculator(noOfFollowers, noOfTweets, noOfRetweets, noOfLikes):
+    '''
+    This function will calcuate a ranking for given user.
+    It depends on 4 parameters - How many people is following him/her, how many tweets user has tweeted, how many of his/her
+    tweets are retweeted and how many his/her tweets are liked
+    tweets, retweets, like: 0-100: 0.1, 101-1000: 0.3, 1001-10000: 0.5, 10001-100000:0.7, 100001-1000000:0.9, 1000001-infi:1
+    following: 0-100: 0.1, 101-1000: 0.3, 1001-10000: 0.5, 10001-50000: 0.6, 50001-100000:0.7, 100001-1000000, 1000001-infi:1
+    :param noOfFollowers: Total number of users following this user
+    :param noOfTweets: Total tweets tweeted by this user
+    :param noOfRetweets: Total tweets of this user retweeted
+    :param noOfLikes: Total tweets of this user liked
+    :return: Normalized Following Count + Normalized tweets count + Normalized retweet count + Normalized like count
+    '''
+    rank = 0
+
+    normFollowers = 0
+    normTweets = 0
+    normRetweets = 0
+    normLikes = 0
+
+    if noOfFollowers < 100:
+        normFollowers = 0.1
+    elif noOfFollowers < 1000:
+        normFollowers = 0.3
+    elif noOfFollowers < 10000:
+        normFollowers = 0.5
+    elif noOfFollowers < 50000:
+        normFollowers = 0.6
+    elif noOfFollowers < 100000:
+        normFollowers = 0.7
+    elif noOfFollowers < 1000000:
+        normFollowers = 0.9
+    else:
+        normFollowers = 1
+
+    if noOfLikes < 100:
+        normLikes = 0.1
+    elif noOfLikes < 1000:
+        normLikes = 0.3
+    elif noOfLikes < 10000:
+        normLikes = 0.5
+    elif noOfLikes < 100000:
+        normLikes = 0.7
+    elif noOfLikes < 1000000:
+        normLikes = 0.9
+    else:
+        normLikes = 1
+
+    if noOfTweets < 100:
+        normTweets = 0.1
+    elif noOfTweets < 1000:
+        normTweets = 0.3
+    elif noOfTweets < 10000:
+        normTweets = 0.5
+    elif noOfTweets < 100000:
+        normTweets = 0.7
+    elif noOfTweets < 1000000:
+        normTweets = 0.9
+    else:
+        normTweets = 1
+
+    if noOfRetweets < 100:
+        normRetweets = 0.1
+    elif noOfRetweets < 1000:
+        normRetweets = 0.3
+    elif noOfRetweets < 10000:
+        normRetweets = 0.5
+    elif noOfRetweets < 100000:
+        normRetweets = 0.7
+    elif noOfRetweets < 1000000:
+        normRetweets = 0.9
+    else:
+        normRetweets = 1
+
+    rank = normFollowers + normTweets + normLikes + normRetweets
+
+    return rank
 
 
 def hashtag_rank_calculator(numTweets, numUsers, numRetweets, numLikes):

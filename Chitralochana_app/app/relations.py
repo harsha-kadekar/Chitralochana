@@ -8,17 +8,18 @@
 
 # This class represents a twitter user. All the information will be extracted from the fetched tweets.
 class Tweet_User(object):
-    def __init__(self, userhandle, username, following, follower, likes, no_of_tweet, positiveCount, negativeCount, polarCount, neutralCount):
+    def __init__(self, userhandle, username, following, follower, likes, no_of_retweet, positiveCount, negativeCount, polarCount, neutralCount):
         self.tweet_userhandle = userhandle  # This is the twitter user handle ex @kadekar_harsha
         self.tweet_username = username      # This is the username used in the Twitter Harsha Kadekar
         self.tweet_following = following    # Number of twitter accounts user is following
         self.tweet_follower = follower      # Number of other twitter accounts which are following this account
         self.tweet_likes = likes            # Total number of likes of all the tweets
-        self.no_of_tweets = no_of_tweet     # Total number of tweets user has tweeted
+        self.no_of_retweets = no_of_retweet     # Total number of retweets of user tweets
         self.positiveCount = positiveCount  # Total number of tweets having a positive tilt
         self.negativeCount = negativeCount  # Total number of tweets having a negative tilt
         self.polarCount = polarCount        # Total number of tweets having polarity
         self.neutralCount = neutralCount    # Total number of tweets which are neutral
+        self.user_ranking = None            # This gives the overall ranking based on Number of people being followed, tweets, likes and retweets
         self.tweets = []                    # Tweets which are tweeted by the user
         self.hashtagsUsed = {}              # List of hashtags used by the user
 
@@ -34,5 +35,5 @@ class Twitter_Hashtag(object):
         self.positiveCount = posCount   # Number of tweets having positive sentiment
         self.polarityCount = polCount   # Number of tweets which are polar
         self.neutralCount = neuCount    # Number of tweets which are neutral
-        self.hashtag_rank = None
+        self.hashtag_rank = None        # This gives the overall ranking for all the hashtags based on tweets, users, likes and retweets
         self.related_hashtags = {}      # All the hashtags used along with this hashtags
