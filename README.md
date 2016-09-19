@@ -2,7 +2,13 @@ Welcome to the Chitralochana wiki!
 
 This a web tool which helps for analyzing the social network chatter. Main idea of this website is, given a topic it should mine the social networks mainly twitter and facebook and collect the information regarding that topic. Once sufficient data has been obtained it should start the analysis of it. Finally after some analysis, it should show that in some kind of visualization so that users can grasp that analysis
 
-Technology to be used - python, python - flask, d3.js, bootstrap css package, nltk, facebook-sdk, tweepy
+Technology used - python, python - flask, d3.js, bootstrap css package, nltk, facebook-sdk, tweepy
+
+As of now following analysis and visualization is done
+1. Top 10 hashtags related to query string [visualization using a bar chart]
+2. Top 10 user handles related to query string [visualization yet to be done]
+3. Word Net - a cloud of words represented based on their frequency usage.
+4. Sentiment Analysis - Total percentage of positive verses negative opinium about the given user query. [Visualization using pie chart]
 
 Some of the analysis to be done
 1. Show how user - tweets relationship - This gives you an idea of how the topic is been discussed. Whether many people are discussing about the topic or few users are discussing about the topic. Something like m-n connections. Is m less in number but n greater in number? Is m greater in number and n lesser in number? Is both m and n less in number? Is both m and n greater in number?
@@ -13,12 +19,11 @@ Some of the analysis to be done
 
 4. Location analysis - To which geographic location this topic is generating interest
 
-5. A word map - Shows what are the key words users are using to describe this topic
+5. Polarity Analysis - Neutral/Polar
 
-6. Sentiment Analysis - 2 types of sentiment will be generated - Positive/Negative and Neutral/Polar
+10. A summary of the discussion.
 
-7. Multimedia - Basically it will show the various multimedia used to describe about this topic
+11. Clusterring of similar type of tweets
 
-8. Various weblinks used to describe the topic.
+For sentiment analysis we have used NaiveBayesClassifier. So for this project we are using Natural language processing and Machine learning algorithms.
 
-9. A summary of the discussion.
