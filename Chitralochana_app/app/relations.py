@@ -25,13 +25,13 @@ class Tweet_User(object):
 
 # This class represent a twitter hashtag.
 class Twitter_Hashtag(object):
-    def __init__(self, hashtag_name, retweets, likes, users, negCount, posCount, neuCount, polCount):
+    def __init__(self, hashtag_name, retweets, likes, users, posCount, negCount, polCount, neuCount):
         self.hash_tag = hashtag_name    # Name of the hashtag
         self.tweets = []                # tweets in which this hashtag is used
         self.no_of_retweets = retweets  # Total retweets count of the tweets of this hashtag
         self.no_of_likes = likes        # Total likes/favorites of the tweets of this hashtag
         self.no_of_users = users        # Total number of users using this hashtag
-        self.negativecount = negCount   # Number of tweets having negative sentiment
+        self.negativeCount = negCount   # Number of tweets having negative sentiment
         self.positiveCount = posCount   # Number of tweets having positive sentiment
         self.polarityCount = polCount   # Number of tweets which are polar
         self.neutralCount = neuCount    # Number of tweets which are neutral

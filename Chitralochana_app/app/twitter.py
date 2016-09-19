@@ -10,7 +10,7 @@
 # Update: 1st Version 6/7/2015
 #######################################################################################################################
 
-from app import socketIO
+from app import socketIO, senana
 from relations import Tweet_User, Twitter_Hashtag
 from langprocessing import LanguageProcessor
 from models import Tweet
@@ -45,6 +45,8 @@ def twittermetamodelBuilding():
 
         no_of_retweets = 0
         no_of_likes = 0
+        total_posCount = 0
+        total_negCount = 0
 
         metadata = {}
 
@@ -52,12 +54,27 @@ def twittermetamodelBuilding():
             new_user = False
             no_of_retweets += tweet.tweet_retweets
             no_of_likes += tweet.tweet_likes
+
+            posCount = 0
+            negCount = 0
+
+            if senana.classifier.classify(senana.feature_extractor(tweet.tweet_msg.split())) == 'positive':
+                tweet.tweet_positiveOrnegative = 1
+                posCount = 1
+                total_posCount += 1
+            else:
+                tweet.tweet_positiveOrnegative = 0
+                negCount = 1
+                total_negCount += 1
+
             if user_tweets.has_key(tweet.tweet_user_handle):
                 user = user_tweets[tweet.tweet_user_handle]
                 user.tweet_likes += tweet.tweet_likes
                 user.no_of_retweets += tweet.tweet_retweets
+                user.positiveCount += posCount
+                user.negativeCount += negCount
             else:
-                user = Tweet_User(tweet.tweet_user_handle, tweet.tweet_user_name, tweet.tweet_user_following, tweet.tweet_user_followers, tweet.tweet_likes, tweet.tweet_retweets, 0, 0, 0, 0)
+                user = Tweet_User(tweet.tweet_user_handle, tweet.tweet_user_name, tweet.tweet_user_following, tweet.tweet_user_followers, tweet.tweet_likes, tweet.tweet_retweets, posCount, negCount, 0, 0)
                 user_tweets.__setitem__(tweet.tweet_user_handle, user)
                 new_user = True
 
@@ -78,8 +95,10 @@ def twittermetamodelBuilding():
                         hashtag_obj.tweets.append(tweet)
                         if new_user:
                             hashtag_obj.no_of_users += 1
+                        hashtag_obj.negativeCount += negCount
+                        hashtag_obj.positiveCount += posCount
                     else:
-                        hashtag_obj = Twitter_Hashtag(hashtag_string, tweet.tweet_retweets, tweet.tweet_likes, 1, 0, 0, 0, 0)
+                        hashtag_obj = Twitter_Hashtag(hashtag_string, tweet.tweet_retweets, tweet.tweet_likes, 1, posCount, negCount, 0, 0)
                         hashtag_obj.tweets.append(tweet)
                         hashtag_rel.__setitem__(hashtag_string, hashtag_obj)
                     if not hashtags_lst.__contains__(hashtag_string):
@@ -122,7 +141,7 @@ def twittermetamodelBuilding():
 
         top10Users = []
         for user in user_tweets.keys():
-            user_tweets[user].user_rank = user_rank_calculator(user_tweets[user].tweet_follower, user_tweets[user].tweets.__len__(), user_tweets[user].no_of_retweets, user_tweets[user].likes)
+            user_tweets[user].user_rank = user_rank_calculator(user_tweets[user].tweet_follower, user_tweets[user].tweets.__len__(), user_tweets[user].no_of_retweets, user_tweets[user].tweet_likes)
             if top10Users.__len__() == 0:
                 top10Users.append((user, user_tweets[user].user_rank))
             else:
@@ -143,6 +162,10 @@ def twittermetamodelBuilding():
 
         full_hashtags = full_hashtags[:full_hashtags.__len__()-1]
 
+        posNegValues = []
+        posNegValues.append(total_posCount)
+        posNegValues.append(total_negCount)
+
         metadata.__setitem__('TotalTweets', list_tweets.__len__())
         metadata.__setitem__('TotalRetweets', no_of_retweets)
         metadata.__setitem__('TotalLikes', no_of_likes)
@@ -151,6 +174,7 @@ def twittermetamodelBuilding():
         metadata.__setitem__('Top5Hashtags', topfiveHashtags)
         metadata.__setitem__('WordList', wordlist)
         metadata.__setitem__('TopUsers', top10Users)
+        metadata.__setitem__('positiveOrNegative', posNegValues)
 
         value = json.dumps(metadata)
 

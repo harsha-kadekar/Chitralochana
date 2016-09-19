@@ -9,6 +9,7 @@ from flask import Flask
 from flask_mongoengine import MongoEngine
 from flask_socketio import SocketIO
 from globalvars import init_globalvariables
+from langprocessing import SentimentAnalyzer
 
 app = Flask(__name__)
 
@@ -20,5 +21,7 @@ socketIO = SocketIO(app)
 
 init_globalvariables()
 db = MongoEngine(app)
+senana = SentimentAnalyzer()
+senana.sentiment_analysis_training()
 
 from app import views

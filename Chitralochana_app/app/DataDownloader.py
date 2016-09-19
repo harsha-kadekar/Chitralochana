@@ -49,6 +49,7 @@ class DataDownloaderMethods(object):
         globalvars.completedMetaModel = False
 
         for searchString in searchStrings:
+            # Sleep for 28 secs to avoid Twitter download rate restrictions
             searchTweets = [status for status in Cursor(api.search, q=searchString).items(MAX_FETCH_TWEETS)]
 
             for tweet in searchTweets:
