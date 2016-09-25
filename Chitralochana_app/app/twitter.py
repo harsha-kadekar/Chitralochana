@@ -193,6 +193,13 @@ def twittermetamodelBuilding():
 
         # socketIO.send('stats', json.dumps(metadata), '/analyze')
 
+def user_hashtag_relationship(user_dictionary):
+    new_user_dict = {}
+    pass
+
+def hashtag_hashtag_relationship(hashtag_dictionary):
+    pass
+
 
 def user_rank_calculator(noOfFollowers, noOfTweets, noOfRetweets, noOfLikes):
     '''

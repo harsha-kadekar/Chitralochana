@@ -105,12 +105,44 @@ class LanguageProcessor(object):
 
     @staticmethod
     def get_minimum_edit_distance(msg1, msg2):
+        '''
+        This function will calculate the minimum edit distance between two strings.
+        Basically how many minimum operations you do on msg1 to get msg2. You can do
+        3 types of operations = either addition, deletion or update.
+        It is calculated using dynamic programming
+        :param msg1: it is the string which needs to be converted to msg2
+        :param msg2: it is the reference string to which msg1 needs to be converted
+        :return: miminum edit distance to convert msg1 to msg2
+        '''
         m = msg1.__len__()
         n = msg2.__len__()
 
         distMatrix = []
 
-        pass
+        for i in range(0, m+1):
+            distMatrix.append([])
+            for j in range(0, n+1):
+                distMatrix[i].append([])
+
+        distMatrix[0][0] = 0
+
+        for i in range(1, m+1):
+            distMatrix[i][0] = i
+
+        for j in range(1, n+1):
+            distMatrix[0][j] = j
+
+        for i in range(1, m+1):
+            for j in range(1, n+1):
+                val = 0
+                if msg1[i-1] == msg2[j-1]:
+                    val = 0
+                else:
+                    val = 2
+                distMatrix[i][j] = min(distMatrix[i-1][j]+1, distMatrix[i][j-1]+1, distMatrix[i-1][j-1] + val)
+
+
+        return distMatrix[m][n]
 
 
 
