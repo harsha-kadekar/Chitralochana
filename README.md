@@ -4,7 +4,7 @@ This a website which helps for analyzing the social network chatter. Main idea o
 
 Demo -
 
-[![ScreenShot](https://drive.google.com/open?id=0BxQoWoSofKvaOG1pMUI4MHRYTWM)](https://drive.google.com/open?id=0BxQoWoSofKvaVEZydkFhYzlRTms)
+[![ScreenShot](SocialBuzz_Demo.png)](https://drive.google.com/open?id=0BxQoWoSofKvaVEZydkFhYzlRTms)
 
 Technology used - python, python - flask, d3.js, bootstrap css package, nltk, facebook-sdk, tweepy
 
