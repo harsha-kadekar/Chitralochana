@@ -36,6 +36,7 @@ TWITTER_ACCESS_TOKEN_SECRET = ''
 
 # Keys related to Tweet fetch
 MAX_FETCH_TWEETS = 100
+MAX_LIVE_TWEETS = 1000
 
 # Keys related to metamodel building
 MAX_WORD_COUNTS = 200   # In case of word cloud, top number of words with most frequency
