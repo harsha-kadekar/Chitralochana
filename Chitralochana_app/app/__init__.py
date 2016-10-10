@@ -21,6 +21,7 @@ socketIO = SocketIO(app)
 
 init_globalvariables()
 db = MongoEngine(app)
+#senana = None
 senana = SentimentAnalyzer()
 senana.sentiment_analysis_training()
 

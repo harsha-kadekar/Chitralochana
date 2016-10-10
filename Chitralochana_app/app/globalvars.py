@@ -11,6 +11,7 @@ metamodelThread = None
 languageProcessingThread = None
 completeTweetFetch = False
 completedMetaModel = False
+realtime = False
 
 def init_globalvariables():
     '''
@@ -23,6 +24,7 @@ def init_globalvariables():
     global languageProcessingThread
     global completeTweetFetch
     global completedMetaModel
+    global realtime
 
     userSentence = ''  # This will store the current user sentence which is being processed
     tweetThread = None  # This is the thread object which will fetch threads
@@ -30,3 +32,4 @@ def init_globalvariables():
     languageProcessingThread = None  # This is the thread where the language processing will take care. Language processing of user sentence and tweets
     completeTweetFetch = False  # This is to indicate that TweetFetchThread has completed the tweet fetching and putting in DB
     completedMetaModel = False  # This is to indicate that metamodel building is complete
+    realtime = False            # This will tell whether the data needs to be pulled from live stream or from RESTful APIs

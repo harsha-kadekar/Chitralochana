@@ -194,7 +194,9 @@ class SentimentAnalyzer(object):
         in future.
         :return: -
         '''
+        print 'Sentiment model developing going to start........'
         listtrainingtweets = read_twitter_sentiment_TrainingData()
+        print 'Finished reading training data......'
         list_words = []
         read_data = []
         dev_test = []
@@ -211,14 +213,14 @@ class SentimentAnalyzer(object):
         # dev_training = self.training_data[len(self.training_data)/2:]
         # dev_test = self.training_data[:len(self.training_data)/2]
 
-        dev_training = self.training_data[0:10000]
-        dev_test = self.training_data[10001:20001]
+        dev_training = self.training_data[0:1000]
+        dev_test = self.training_data[1001:1351]
 
         for (words, senti) in dev_training:
             list_words.extend(words)
 
         feat = self.Get_Frequency_Distribution(list_words)
-        max_1000 = feat.most_common(10000)
+        max_1000 = feat.most_common(1000)
 
         self.word_features = [word for (word, count) in max_1000]
 
@@ -228,6 +230,7 @@ class SentimentAnalyzer(object):
         # self.test_data = read_data[:read_data.__len__()/2]
 
         # classifer = nltk.NaiveBayesClassifier.train(self.training_data)
+        print 'Going to start the classification......'
         self.training_data = nltk.classify.apply_features(self.feature_extractor, dev_training)
         dev_test_data = nltk.classify.apply_features(self.feature_extractor, dev_test)
         # for (words, label) in dev_training:

@@ -45,6 +45,6 @@ MAX_WORD_COUNTS = 200   # In case of word cloud, top number of words with most f
 FACEBOOK_APP_ID = ''
 FACEBOOK_SECRET_KEY = ''
 
-TRAINING_TW_DATA_FOLDER = 'C:\\D_Drive\\Experiments\\NLP\\Twitter\\'
+TRAINING_TW_DATA_FOLDER = 'C:\\D_Drive\\Coding\\TestData\\Twitter\\' #'C:\\D_Drive\\Experiments\\NLP\\Twitter\\'
 TRAINING_TW_SENTIMENT_FILE = 'sentiment.data'
 

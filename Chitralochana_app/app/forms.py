@@ -7,10 +7,12 @@
 #######################################################################################################################
 from flask_wtf import Form
 from wtforms import StringField
+from wtforms import BooleanField
 from wtforms.validators import DataRequired
 
 # This class represents the initial form displayed in the index page.
 # It collects the user information from user.
 class SearchForm(Form):
     user_input_string = StringField('user_input_string', validators=[DataRequired()])
+    realtime = BooleanField('realtime', default=True)
 

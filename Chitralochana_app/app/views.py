@@ -24,10 +24,15 @@ def index():
         flash("User input = '" + form.user_input_string.data +"' will be analyzed ")
         print form.user_input_string.data
         session['usersentence'] = form.user_input_string.data.__str__()
+        session['realtime'] = bool(form.realtime.data.__str__())
+
         globalvars.userSentence = form.user_input_string.data.__str__()
         user_sentence = globalvars.userSentence
+        globalvars.realtime = form.realtime.data
+        real_time = globalvars.realtime
+        print globalvars.realtime
         print globalvars.userSentence
-        globalvars.languageProcessingThread = thread.start_new_thread(DataDownloaderMethods.twitterdownloadInitiator,(user_sentence, ))
+        globalvars.languageProcessingThread = thread.start_new_thread(DataDownloaderMethods.twitterdownloadInitiator,(user_sentence, real_time,))
         return redirect(url_for('analyze'))
 
     return render_template('index.html', title='Home', form=form)

@@ -56,15 +56,55 @@ def InputFilewithCSV(filename):
 
     return list_tweets_with_classification
 
+def InputFile4withCSV(filename):
+    '''
+    This function will parse a csv file and then gives a list of tuples with tweets and its classification as
+    positive or negative
+    :param filename: csv file which needs to be read
+    :return: list of tweet tuples of format (sentiment, tweet text)
+    '''
+    list_tweets_with_classification = []
+    with open(filename) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row['Sentiment'] == '4':
+                list_tweets_with_classification.append((1, row['SentimentText']))
+            elif row['Sentiment'] == '0':
+                list_tweets_with_classification.append((0, row['SentimentText']))
+
+    return list_tweets_with_classification
+
+def InputFile5withCSV(filename):
+    '''
+    This function will parse a csv file and then gives a list of tuples with tweets and its classification as
+    positive or negative
+    :param filename: csv file which needs to be read
+    :return: list of tweet tuples of format (sentiment, tweet text)
+    '''
+    list_tweets_with_classification = []
+    with open(filename) as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            if row['Sentiment'] == '1':
+                list_tweets_with_classification.append((1, row['SentimentText']))
+            elif row['Sentiment'] == '0':
+                list_tweets_with_classification.append((0, row['SentimentText']))
+
+    return list_tweets_with_classification
+
+
 
 def FormTrainingData():
-    file1 = 'C:\D_Drive\Experiments\NLP\Twitter\sentiment_training.txt'
-    file2 = 'C:\D_Drive\Experiments\NLP\Twitter\Sentiment Analysis Dataset.csv'
-    file3 = 'C:\D_Drive\Experiments\NLP\Twitter\sentiment_testdata.txt'
+    file1 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\training.txt'#'C:\D_Drive\Experiments\NLP\Twitter\sentiment_training.txt'
+    file2 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\Sentiment Analysis Dataset.csv' #'C:\D_Drive\Experiments\NLP\Twitter\Sentiment Analysis Dataset.csv'
+    file3 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\testdata.txt'#'C:\D_Drive\Experiments\NLP\Twitter\sentiment_testdata.txt'
+    file4 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\testdata.manual.2009.06.14.csv'
+    # file5 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\training.1600000.processed.noemoticon.csv'
     training_data = []
     training_data.extend(InputFile(file1, 1, 0))
     training_data.extend(InputFile(file3, 1, 0))
     training_data.extend(InputFilewithCSV(file2))
+    training_data.extend(InputFile4withCSV(file4))
 
     outputFile = TRAINING_TW_DATA_FOLDER + TRAINING_TW_SENTIMENT_FILE
     trainingFile = open(outputFile, "w")
@@ -91,7 +131,7 @@ def read_twitter_sentiment_TrainingData():
                 listSentiments.append((parts[1].strip(), 'negative'))
     return listSentiments
 
-# FormTrainingData()
+FormTrainingData()
 
 
 
