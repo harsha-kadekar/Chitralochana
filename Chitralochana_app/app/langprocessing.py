@@ -16,7 +16,8 @@ import string
 import nltk
 import random
 import datetime
-from config import MAX_WORD_COUNTS
+#from config import MAX_WORD_COUNTS
+from app import config
 from training import read_twitter_sentiment_TrainingData
 
 class LanguageProcessor(object):
@@ -101,7 +102,7 @@ class LanguageProcessor(object):
             tweet = emoji_re.sub('', tweet)
             list_tokens = [tokens for tokens in LanguageProcessor.twitter_tokens_re.findall(tweet) if tokens.lower() not in LanguageProcessor.twitter_ignore_list and not tokens.startswith('https:') and tokens.__len__() > 1]
             count_all.update(list_tokens)
-        return count_all.most_common(MAX_WORD_COUNTS)
+        return count_all.most_common(config['MAX_WORD_COUNTS'])
 
     @staticmethod
     def get_minimum_edit_distance(msg1, msg2):
@@ -186,7 +187,7 @@ class SentimentAnalyzer(object):
             features['contains '+word] = (word in document_words)
         return features
 
-    def sentiment_analysis_training(self):
+    def sentiment_analysis_training(self, training_data_path):
         '''
         This is the function which will develop the model which will help us to classify a tweet
         whether it is positive or negative. As of now it is using NaiveBayes Classifier.
@@ -195,7 +196,7 @@ class SentimentAnalyzer(object):
         :return: -
         '''
         print 'Sentiment model developing going to start........'
-        listtrainingtweets = read_twitter_sentiment_TrainingData()
+        listtrainingtweets = read_twitter_sentiment_TrainingData(training_data_path)
         print 'Finished reading training data......'
         list_words = []
         read_data = []

@@ -10,15 +10,16 @@
 # Update: 1st Version 6/7/2015
 #######################################################################################################################
 
-from app import socketIO, senana
+from app import senana
 from relations import Tweet_User, Twitter_Hashtag
 from langprocessing import LanguageProcessor
 from models import Tweet
 import re
 import time
 from flask_socketio import emit
+from flask import current_app, session
 import json
-import globalvars
+# import globalvars
 
 
 def twittermetamodelBuilding():
@@ -31,16 +32,16 @@ def twittermetamodelBuilding():
 
     while(True):
 
-        if globalvars.completedMetaModel and globalvars.completeTweetFetch:
+        if session['completedMetaModel'] and session['completeTweetFetch']:
             time.sleep(2)
             continue
 
-        print globalvars.userSentence, "From metamodel building"
+        print session['userSentence'], "From metamodel building"
 
         list_tweets = []
         user_tweets = {}
         hashtag_rel = {}
-        list_tweets = Tweet.objects(tweet_user_search_query=globalvars.userSentence)
+        list_tweets = Tweet.objects(tweet_user_search_query=session['userSentence'])
         tweet_msgs_lst = []
 
         no_of_retweets = 0
@@ -180,13 +181,13 @@ def twittermetamodelBuilding():
 
         # socketIO.emit('stats', value, '/analyze')
         # emit('stats', value)
-        socketIO.emit('stats', value, namespace='/analyze')
-        if globalvars.completeTweetFetch is True:
+        #socketIO.emit('stats', value, namespace='/analyze')
+        if session['completeTweetFetch'] is True:
             print 'Acknowledging Tweet fetch is complete'
 
-        if previouscount == list_tweets.__len__() and globalvars.completeTweetFetch is True:
+        if previouscount == list_tweets.__len__() and session['completeTweetFetch'] is True:
             print 'meta model build is done'
-            globalvars.completedMetaModel = True
+            session['completedMetaModel'] = True
         else:
             previouscount = list_tweets.__len__()
         time.sleep(2)

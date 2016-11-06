@@ -1,7 +1,0 @@
-#######################################################################################################################
-# Name: ThirdPartyLibs.txt
-# Description: This file has the list of all the third party libraries/packages used in this project.
-#######################################################################################################################
-
-Flask
-Flask-MongoAlchemy

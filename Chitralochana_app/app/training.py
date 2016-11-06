@@ -7,7 +7,7 @@
 
 import csv
 import sys
-from config import TRAINING_TW_DATA_FOLDER, TRAINING_TW_SENTIMENT_FILE
+
 
 def InputFile(filename, typeOfFile, header):
     '''
@@ -94,7 +94,7 @@ def InputFile5withCSV(filename):
 
 
 
-def FormTrainingData():
+def FormTrainingData(training_data_path):
     file1 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\training.txt'#'C:\D_Drive\Experiments\NLP\Twitter\sentiment_training.txt'
     file2 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\Sentiment Analysis Dataset.csv' #'C:\D_Drive\Experiments\NLP\Twitter\Sentiment Analysis Dataset.csv'
     file3 = r'C:\D_Drive\Coding\TestData\Twitter\SentimentAnalysis\testdata.txt'#'C:\D_Drive\Experiments\NLP\Twitter\sentiment_testdata.txt'
@@ -106,7 +106,7 @@ def FormTrainingData():
     training_data.extend(InputFilewithCSV(file2))
     training_data.extend(InputFile4withCSV(file4))
 
-    outputFile = TRAINING_TW_DATA_FOLDER + TRAINING_TW_SENTIMENT_FILE
+    outputFile = training_data_path
     trainingFile = open(outputFile, "w")
 
     for tp in training_data:
@@ -116,9 +116,9 @@ def FormTrainingData():
     trainingFile.close()
 
 
-def read_twitter_sentiment_TrainingData():
+def read_twitter_sentiment_TrainingData(training_data_path):
     listSentiments = []
-    inputFile = TRAINING_TW_DATA_FOLDER + TRAINING_TW_SENTIMENT_FILE
+    inputFile = training_data_path
     dataFile = open(inputFile, "r")
     lines = dataFile.readlines()
     dataFile.close()
@@ -131,7 +131,7 @@ def read_twitter_sentiment_TrainingData():
                 listSentiments.append((parts[1].strip(), 'negative'))
     return listSentiments
 
-FormTrainingData()
+#FormTrainingData()
 
 
 
