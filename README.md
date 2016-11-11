@@ -2,7 +2,7 @@ Welcome to the SocialBuzz(Chitralochana) wiki!
 
 This a website which helps for analyzing the social network chatter. Main idea of this website is, given a topic it should mine the social networks mainly twitter and facebook and collect the information regarding that topic. Once sufficient data has been obtained it should start the analysis of it. Finally after some analysis, it should show that in some kind of visualization so that users can grasp that analysis
 
-Demo -
+Demo (Click on the image)-
 
 [![ScreenShot](SocialBuzz_Demo.png)](https://drive.google.com/open?id=0BxQoWoSofKvaVEZydkFhYzlRTms)
 
