@@ -61,7 +61,7 @@ def create_app(config_name):
 
     login_manager.init_app(app)
 
-
+    #TODO::Instead of training everytime we start the server, once train it and store it. Load the model everytime.
     senana.sentiment_analysis_training(app.config['TRAINING_TW_DATA_FOLDER'] + app.config['TRAINING_TW_SENTIMENT_FILE'])
 
     return app

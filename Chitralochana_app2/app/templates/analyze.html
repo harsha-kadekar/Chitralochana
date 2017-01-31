@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block page_content %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Stats</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h3>{{ userquerysearch }}</h3>
+                            <div class="bs-component">
+                                <ul class="list-group">
+                                    <li class="list-group-item" id='tweets-nos'>
+                                        <span  class="badge">0</span>
+                                        Number of tweets processed
+                                    </li>
+                                    <li class="list-group-item" id='user-nos'>
+                                        <span  class="badge">0</span>
+                                        Number of users contributing
+                                    </li>
+                                    <li class="list-group-item" id='hashtag-searchs'>
+                                        <span  class="badge"></span>
+                                        Related hashtags used
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Hashtag Measure</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Hashtag comparions</h4>
+                            <div class="bs-component">
+                                <div class="barchart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Word Cloud</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Frequent words in tweets</h4>
+                            <div class="bs-component">
+                                <div class="wordcloudrep"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Positive/Negative Feedback</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>Overall sentiment of search query</h4>
+                            <div class="bs-component">
+                                <div class="posNegRep"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bs-component">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Polar or Neutral Feedback</h3>
+                        </div>
+                        <div class="panel-body">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+

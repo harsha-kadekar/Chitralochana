@@ -17,11 +17,12 @@ import thread
 
 
 
-# This is the mail page of the website where user provides the search string.
+# This is the main page of the website where user provides the search string.
 # Once it validates the form, it will create the language processing thread and it will pass the user sentence to it.
 # Then redirects or move to analyze page.
 @main.route('/', methods=['GET', 'POST'])
 @main.route('/index', methods=['GET', 'POST'])
+@login_required
 def index():
     if session.__contains__('initialize') == False:
         session['userSentence'] = None

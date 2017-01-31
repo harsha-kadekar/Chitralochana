@@ -169,18 +169,28 @@ class DataDownloaderMethods(object):
         :return: -
         '''
 
-        with app.app_context():
 
+
+        print 'again testing let me check'
+
+        with app.app_context():
+            print 'starting authentication twitter'
             auth = OAuthHandler(current_app.config['TWITTER_CONSUMER_KEY'], current_app.config['TWITTER_CONSUMER_SECRET'])
             auth.set_access_token(current_app.config['TWITTER_ACCESS_TOKEN'], current_app.config['TWITTER_ACCESS_TOKEN_SECRET'])
             lisNer = TweetListener()
             tweetStream = Stream(auth, lisNer)
 
+
+            print 'mongodb settings now'
             deleteEntries = connect(current_app.config['MONGODB_SETTINGS']['DB'])
             deleteEntries.drop_database(current_app.config['MONGODB_SETTINGS']['DB'])
 
+            print 'before session getcurrenttweets'
+
             session['completeTweetFetch'] = False
             session['completedMetaModel'] = False
+
+            print 'after session getcurrenttweets'
 
             tweetStream.filter(track=searchStrings)
 
