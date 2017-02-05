@@ -183,6 +183,7 @@ def twittermetamodelBuilding(user_id):
 
         # socketIO.emit('stats', value, '/analyze')
         # emit('stats', value)
+        print 'emitting stats'
         socket_io.emit('stats', value, namespace='/analyze')
         if userSearchObj.tweet_fetch_complete is True:
             print 'Acknowledging Tweet fetch is complete'

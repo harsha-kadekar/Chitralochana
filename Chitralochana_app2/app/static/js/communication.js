@@ -1,6 +1,6 @@
 $(document).ready( function(){
     namespace = '/analyze';
-    var socket = io.connect('http://'+document.domain+':'+location.port+namespace, {'connect timeout': 1000});
+    var socket = io.connect('http://'+document.domain+':'+location.port+namespace);
 
     socket.on('connect', function(){
         socket.emit('response event', {reply: 'I am connected!'});

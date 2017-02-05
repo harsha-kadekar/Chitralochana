@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+{{ super() }}
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="/static/js/communication.js?3"></script>
+<script src="/static/js/d3.js"></script>
+<script src="/static/js/d3.layout.cloud.js"></script>
+{% endblock %}
+
 {% block page_content %}
         <div class="row">
             <div class="col-lg-12">
